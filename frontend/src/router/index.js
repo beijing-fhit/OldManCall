@@ -5,6 +5,9 @@ import scan from '@/components/scan'
 import ScanSuccess from '@/components/ScanSuccess'
 import alreadyBindInfo from '@/components/alreadyBindInfo'
 import addContact from '@/components/addContact'
+import settings from '@/components/settings'
+import updateNumber from '@/components/updateNumber'
+import call from '@/components/call'
 
 Vue.use(Router)
 
@@ -48,6 +51,30 @@ export default new Router({
       component: addContact,
       meta: {
         title: '号码绑定'
+      }
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: settings,
+      meta: {
+        title: '设置'
+      }
+    },
+    {
+      path: '/updateNumber',
+      name: 'updateNumber',
+      component: updateNumber,
+      meta: {
+        title: '号码绑定和修改'
+      }
+    },
+    {
+      path: '/call',
+      name: 'call',
+      component: call,
+      meta: {
+        title: '呼叫'
       }
     }
   ]
