@@ -54,8 +54,8 @@ export default {
 
 <style scoped>
   .all-container{
-    /*width: 100%;*/
-    /*height: fit-content;*/
+    width: 100%;
+    height: fit-content;
   }
   .add-tip {
     display: flex;

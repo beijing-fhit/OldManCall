@@ -19,13 +19,17 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import include
 from django.views.generic import TemplateView
+from backend import views
 
 # from OldManCall import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', TemplateView.as_view(template_name='index.html')),
+    # url(r'^$', TemplateView.as_view(template_name='index.html')),
+    url(r'^$', views.index),
     url(r'api/.*', lambda e: HttpResponse('戏说不是胡说')),
     url(r'^docs/', include('rest_framework_docs.urls')),
+    url(r'^code/', views.get_code, name='code'),
+    url(r'^openid/', views.get_open_id, name='openid'),
 ]
 # urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
