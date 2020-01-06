@@ -5,19 +5,20 @@
 </template>
 
 <script>
-// import axios from 'axios'
+import axios from 'axios'
 export default {
 
   name: 'App',
   created () {
-    // this.getOpenId()
+    this.getOpenId()
   },
   methods: {
-    // getOpenId: function () {
-    //   axios.get('/code').then(res => {
-    //     console.log('获取openid成功:' + res)
-    //   })
-    // }
+    getOpenId: function () {
+      axios.get('/getopenid').then(res => {
+        console.log('在app.vue中获取openid成功:', res)
+        sessionStorage.setItem('openId',JSON.stringify(res.data))
+      })
+    }
   }
 }
 </script>

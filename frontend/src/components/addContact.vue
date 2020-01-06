@@ -9,7 +9,7 @@
     <div class="contact-panel">
       <el-row class="first-item">
         <i class="el-icon-star-on red-star margin-horizontal"></i>
-        <span class="title-name">联系人</span>
+        <span class="title-name">联系人1</span>
         <span class="title-tip">(必填)</span>
       </el-row>
       <el-row class="first-input-container bottom-border">

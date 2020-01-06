@@ -31,5 +31,8 @@ urlpatterns = [
     url(r'^docs/', include('rest_framework_docs.urls')),
     url(r'^code/', views.get_code, name='code'),
     url(r'^openid/', views.get_open_id, name='openid'),
+    url(r'^getopenid/', views.get_openid_from_session, name='getopenid'),
+    url(r'^scan/', views.scan, name='scan'),
+    url(r'^scan_resul/', views.scan_result, name='scan_result'),
 ]
 # urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

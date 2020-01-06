@@ -9,7 +9,6 @@
 
 <script>
 import oldManInfo from './oldManInfo'
-
 export default {
   name: 'alreadyBindInfo',
   components: {oldManInfo},

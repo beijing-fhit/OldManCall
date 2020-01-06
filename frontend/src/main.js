@@ -5,6 +5,11 @@ import router from './router'
 import ElementUI from 'element-ui'
 import App from './App'
 import 'element-ui/lib/theme-chalk/index.css'
+// Toast
+import './components/Toast/index.css'
+import Toast from './components/Toast/index'
+
+Vue.use(Toast)
 
 Vue.use(ElementUI)
 Vue.config.productionTip = false
@@ -22,24 +27,20 @@ router.beforeEach((to, from, next) => {
   }
   next()
 })
-
-// // 默认调用一次设置
-// setHtmlFontSize()
-//
-// function setHtmlFontSize () {
-//   // 1. 获取当前屏幕的宽度
-//   var windowWidth = document.documentElement.offsetWidth
-//   // console.log(windowWidth);
-//   // 2. 定义标准屏幕宽度 假设375
-//   var standardWidth = 375
-//   // 3. 定义标准屏幕的根元素字体大小 假设100px 1rem=100px 10px = 0.1rem 1px 0.01rem
-//   var standardFontSize = 100
-//   // 4. 计算当前屏幕对应的根元素字体大小
-//   var nowFontSize = windowWidth / standardWidth * standardFontSize + 'px'
-//   // console.log(nowFontSize);
-//   // 5. 把当前计算的根元素的字体大小设置到html上
-//   document.querySelector('html').style.fontSize = nowFontSize
+// var onPlusReady = function (callback, context = this) {
+//   if (window.plus) {
+//     callback.call(context)
+//   } else {
+//     document.addEventListener('plusready', callback.bind(context))
+//   }
 // }
-//
-// // 6. 添加一个屏幕宽度变化的事件 屏幕变化就触发变化根元素字体大小计算的js
-// window.addEventListener('resize', setHtmlFontSize)
+// Vue.mixin({
+//   beforeCreate () {
+//     onPlusReady(() => {
+//       this.plusReady = true
+//     }, this)
+//   },
+//   methods: {
+//     onPlusReady: onPlusReady
+//   }
+// })

@@ -44,14 +44,17 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  # 新加的跨域插件
-    'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # 按顺序,跨域组件
+    'django.middleware.common.CommonMiddleware',  # 按顺序
+    'django.middleware.csrf.CsrfViewMiddleware',  # 按顺序
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-CORS_ORIGIN_ALLOW_ALL = True  # 新增的跨域访问设置
+#  新增以下配置  #
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
+
 REST_FRAMEWORK_DOCS = {
     'HIDE_DOCS': False
 }
