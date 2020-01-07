@@ -1,78 +1,33 @@
-import axios from 'axios'
-/**
- * 封装request方法
- */
-function request(url, method, header, data) {
-  return new Promise((resove, reject) => {
-    axios.request(url,{
-      data: data ? data : {},
-      header: header ? header : {},
-      method: method.toUpperCase(),
-      success: function (res) {
-        resove(res.data)
-      },
-      fail: function (err) {
-        reject(JSON.stringify(err))
-      }
-    })
-  })
+import {get, post, deletes, put} from './http'
+import {service} from './config'
+
+const wxConfig = () => {
+  return get(service.wxConfig)
+}
+const getHeader = function (openId) {
+  return {
+    'content-type': 'application/json',
+    'Authorization': 'Basic ' + openId
+  }
 }
 
-/**
- * GET请求
- */
-var requestGet = (url, data, header) => {
-  return request(url, 'GET', header, data)
+const getOpenId = () => {
+  console.log('api---getOpenId url:' + service.getOpenId)
+  return get(service.getOpenId)
 }
-/**
- * POST请求
- */
-var requestPost = (url, data, header) => {
-  return request(url, 'POST', header, data)
+const weChatState = (openId, nickName = '', serviceno = '') => {
+  return post(service.weChatState,
+    {
+      Nickname: nickName,
+      serviceno: serviceno
+    }
+    , getHeader(openId))
 }
-/**
- * PUT请求
- */
-var requestPut = (url, data, header) => {
-  return request(url, 'PUT', header, data)
-}
-/**
- * DELETE请求
- */
-var requestDelete = (url, data, header) => {
-  return request(url, 'DELETE', header, data)
-}
-
-
-/**
- * 用户登录
- */
-var login = () => {
-  return new Promise((resove, reject) => {
-    wx.login({
-      success: resove,
-      fail: reject
-    })
+const verifyQrCodeActive = (qrCodeId) => {
+  return get(service.verifyQrCodeActive, {
+    qrcodeid: qrCodeId
   })
 }
-/**
- * 获取分享信息
- */
-var getShareInfo = (sTicket) => {
-  return new Promise((resove, reject) => {
-    wx.getShareInfo({
-      shareTicket: sTicket,
-      success: resove,
-      fail: reject
-    })
-  })
+export default {
+  wxConfig, getOpenId, weChatState, verifyQrCodeActive
 }
-var checkSession = () => {
-  return new Promise((resove, reject) => {
-    wx.checkSession({
-      success: resove,
-      fail: reject
-    })
-  })
-}
-module.exports = {requestGet, requestPost, requestPut, requestDelete, login, getShareInfo, checkSession}

@@ -8,7 +8,6 @@ import 'element-ui/lib/theme-chalk/index.css'
 // Toast
 import './components/Toast/index.css'
 import Toast from './components/Toast/index'
-
 Vue.use(Toast)
 
 Vue.use(ElementUI)

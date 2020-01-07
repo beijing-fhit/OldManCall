@@ -13,9 +13,8 @@
 
 <script>
 import topbar from './topbar'
-import axios from 'axios'
 import wx from 'weixin-js-sdk'
-import config from '../config'
+import api from '../api'
 export default {
   name: 'scan',
   components: {topbar},
@@ -25,7 +24,7 @@ export default {
       img_url: require('../assets/yellow_card.png')
     }
   },
-  created () {
+  mounted () {
     console.log('created---')
     wx.ready(function () {
       console.log('ready-----')
@@ -33,7 +32,7 @@ export default {
     wx.error(function (res) {
       console.log('error-----')
     })
-    axios.get('https://agency.ucallclub.com/Common/JsApiConfig').then(config => {
+    api.wxConfig().then(config => {
       console.log('config', config.data)
       wx.config({
         debug: false,
@@ -49,7 +48,10 @@ export default {
     routeToScanSuccess: function () {
       // this.$router.push('/ScanSuccess')
       // this.startScan()
-      this.handleScanResult('http://www.baidu.com?qrcodeid=12sdfsf3fawerbsvgswe')
+      // 未激活二维码
+      // this.handleScanResult('http://wechatcall.ucallclub.com/ucall/call?type=1&eqrcodeid=da887208fe9a414b81da578b52102012')
+      // 已激活二维码
+      this.handleScanResult('http://wechatcall.ucallclub.com/ucall/call?type=1&eqrcodeid=041b1167896442a591237e4090aa52ff')
     },
     startScan: function () {
       wx.scanQRCode({
@@ -63,25 +65,32 @@ export default {
       })
     },
     handleScanResult: function (content) {
-      if (content.indexOf('qrcodeid') !== -1) {
-        var params = content.split('?')[1]
-        var qrcodeid = params.split('=')[1]
-        console.log('传入的qrcode是:' + config.service.verifyQrCodeActive)
-        axios.get(config.service.verifyQrCodeActive, {
-          params: {
-            qrcodeid: qrcodeid
-          }
-        }).then(res => {
-          // console.log('验证二维码激活状态结果:', res)
+      if (content.indexOf('eqrcodeid') !== -1) { // 注意，这里判断了二维码内容里面的url包含eqrcodeid
+        var substr = content.split('?')[1]
+        // var params = substr.split('&')
+        var qrcodeid = this.getQueryValue(substr,'eqrcodeid')
+        console.log('传入的qrcode是:' + qrcodeid)
+        api.verifyQrCodeActive(qrcodeid).then(res => {
+          console.log('验证二维码激活状态结果:', res)
+          var UcallFreeId = sessionStorage.getItem('UcallFreeId')
+          console.log('本地的UCallfreeid为:', UcallFreeId)
           var data = res.data
           if (data.Code === 0) {
             switch (data.ActiveState) {
               case 0:
+                // 未激活
                 this.$router.push('/addContact')
                 break
               case 1:
+                // 已激活
                 // 判断owner和自己是否相等
-
+                if (data.Owner === UcallFreeId) {
+                  // 此二维码属于自己
+                  this.$router.push('/settings')
+                } else {
+                  // 此二维码属于别人
+                  this.$router.push('/alreadyBindInfo')
+                }
                 break
               default:
                 // alert('二维码无效')
@@ -93,6 +102,16 @@ export default {
           console.log('error验证二维码激活状态结果:', res)
         })
       }
+    },
+    getQueryValue: function (str,queryName) {
+      var vars = str.split("&");
+      for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split("=");
+        if (pair[0] === queryName) {
+          return pair[1];
+        }
+      }
+      return null;
     }
 
   }

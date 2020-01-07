@@ -5,7 +5,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
+import api from './api'
 export default {
 
   name: 'App',
@@ -14,9 +15,20 @@ export default {
   },
   methods: {
     getOpenId: function () {
-      axios.get('/getopenid').then(res => {
-        console.log('在app.vue中获取openid成功:', res)
-        sessionStorage.setItem('openId',JSON.stringify(res.data))
+      api.getOpenId().then(res => {
+        // console.log('在app.vue中获取openid成功:', res)
+        let openId = res.data
+        sessionStorage.setItem('openId', openId)
+        // 获取用户状态，保存其中的ucallfreeid
+        api.weChatState(openId).then(res => {
+          // console.log('weChatState', res)
+          sessionStorage.setItem('UcallFreeId', res.data.UcallFreeId)
+          sessionStorage.setItem('Tel', res.data.Tel[0])
+        }).catch(res => {
+          console.log('webChatState error', res)
+        })
+      }).catch(res => {
+        console.log('在app.vue中获取openid失败:', res)
       })
     }
   }
