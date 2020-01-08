@@ -13,16 +13,16 @@
         <span class="title-tip">(必填)</span>
       </el-row>
       <el-row class="first-input-container bottom-border">
-        <el-input type="number" v-model="number1" class="normal-input-style no-border-input" placeholder="请输入手机号码"
+        <el-input type="number" v-model="number" class="normal-input-style no-border-input" placeholder="请输入手机号码"
                   clearable></el-input>
       </el-row>
       <el-row class="second-input-container">
-        <el-input type="number" v-model="number2" class="normal-input-style no-border-input sixty-percent"
+        <el-input type="number" v-model="verifyNumber" class="normal-input-style no-border-input sixty-percent"
                   placeholder="请输入验证码"></el-input>
-        <span class="fourty-percent verify-code-text-btn">获取验证码</span>
+        <span class="fourty-percent verify-code-text-btn" @click="getVerifyCode">{{this.verifyBtnContent}}</span>
       </el-row>
     </div>
-    <el-button type="success" class="wide-button" @click="centerDialogVisible = true">确定</el-button>
+    <el-button type="success" class="wide-button" @click="verify">确定</el-button>
     <el-dialog
       :visible.sync="centerDialogVisible"
       title="绑定成功"
@@ -31,22 +31,112 @@
       center>
       <span class="center-dialog-content">还需要再添加一位联系人么？</span>
       <span slot="footer" class="dialog-footer dialog-btn-group">
-        <span @click="centerDialogVisible = false" class="skip-btn">跳过</span>
-        <span type="primary" @click="centerDialogVisible = false" class="add-another-btn">添加下一位</span>
+        <span @click="dialogSkip" class="skip-btn">跳过</span>
+        <span type="primary" @click="dialogAddMore" class="add-another-btn">添加下一位</span>
       </span>
     </el-dialog>
   </div>
 </template>
 <script>
 import Topbar from './topbar'
+import api from '../api'
 export default {
   name: 'addContact',
   components: {Topbar},
   data () {
     return {
-      number1: '',
-      number2: '',
-      centerDialogVisible: false
+      number: '',
+      verifyNumber: '',
+      verifyBtnContent: '获取验证码',
+      isVerifyBtnClickable: true,
+      centerDialogVisible: false,
+      contact: []
+    }
+  },
+  methods: {
+    getVerifyCode: function () {
+      if (this.number.length === 0) {
+        this.$toast('号码不能为空！')
+        return
+      }
+      if (!this.isVerifyBtnClickable) {
+        this.$toast('您点的太快了，请稍等！')
+        return
+      }
+      var that = this
+      api.getVerifyCode(sessionStorage.getItem('openId'), this.number).then(res => {
+        console.log('获取号码', res)
+        if (res.data.Code !== 0) {
+          if (res.data.Code === -3) {
+            that.$toast('验证码请求太频繁！')
+          } else if (res.data.Code === -6) {
+            that.$toast('号码格式不正确！')
+          }
+          return
+        }
+        // 设置倒计时
+        that.$toast('短信已发送')
+        that.countDown()
+        // console.log('获取验证码成功:', res)
+      }).catch(err => {
+        console.log('获取验证码失败:', err)
+      })
+    },
+    verify: function () {
+      if (this.number.length === 0) {
+        this.$toast('号码不能为空！')
+        return
+      }
+      if (this.verifyNumber.length === 0) {
+        this.$toast('验证码不能为空！')
+        return
+      }
+      api.verifyNumber(sessionStorage.getItem('openId'), this.number, this.verifyNumber)
+        .then(res => {
+          console.log('验证成功:', res)
+          if (res.data.Code === 0) {
+            // console.log('验证成功:', res)
+            this.$toast('验证成功')
+            this.centerDialogVisible = true
+            if (this.contact.indexOf(this.number) === -1) {
+              this.contact.push(this.number)
+            }
+            sessionStorage.setItem('contact', this.contact)
+          } else {
+            // console.log('验证失败:', res.data)
+            this.$toast('验证失败')
+            this.centerDialogVisible = false
+          }
+        })
+        .catch(() => {
+          this.$toast('验证失败')
+          // console.log('验证失败:', err)
+          this.centerDialogVisible = false
+        })
+    },
+    countDown: function () {
+      var that = this
+      that.isVerifyBtnClickable = false
+      var count = 60
+      var cd = setInterval(function () {
+        that.verifyBtnContent = count + 's后重新发送'
+        count--
+        // console.log('倒计时:', count)
+        if (count <= 0) {
+          window.clearInterval(cd)
+          that.isVerifyBtnClickable = true
+          that.verifyBtnContent = '获取验证码'
+        }
+      }, 1000)
+    },
+    dialogSkip: function () {
+      this.centerDialogVisible = false
+      console.log('跳过')
+      this.$router.push('/settings')
+    },
+    dialogAddMore: function () {
+      console.log('添加下一位')
+      this.centerDialogVisible = false
     }
   }
 }
@@ -133,6 +223,9 @@ export default {
   }
   .bottom-border{
     border-bottom: 0.05rem inset #E5E5E5;
+  }
+  /deep/ .no-background-color{
+    background-color: white;
   }
   .second-input-container{
     width: 100%;

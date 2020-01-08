@@ -30,12 +30,12 @@ service.interceptors.response.use(
   }
 )
 
-export function get (url, params = {}) {
-  // params.t = new Date().getTime() // get方法加一个时间参数,解决ie下可能缓存问题.
+export function get (url, params = {}, headers = {}) {
+  params.t = new Date().getTime() // get方法加一个时间参数,解决ie下可能缓存问题.
   return service({
     url: url,
     method: 'get',
-    headers: {},
+    headers: headers,
     params: params
   })
 }

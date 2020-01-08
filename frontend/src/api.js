@@ -1,4 +1,4 @@
-import {get, post, deletes, put} from './http'
+import {get, post} from './http'
 import {service} from './config'
 
 const wxConfig = () => {
@@ -28,6 +28,23 @@ const verifyQrCodeActive = (qrCodeId) => {
     qrcodeid: qrCodeId
   })
 }
+// 根据手机号获取验证码
+const getVerifyCode = (openId, number) => {
+  return get(service.verifyCode, {
+    tel: number
+  }, getHeader(openId))
+}
+// 验证手机号是否合法
+const verifyNumber = (openId, number, verifyNumber) => {
+  return post(service.verify, {
+    AuthCode: verifyNumber,
+    Tel: number
+  }, getHeader(openId))
+}
+// 保存老人信息
+const saveInfo = () => {
+
+}
 export default {
-  wxConfig, getOpenId, weChatState, verifyQrCodeActive
+  wxConfig, getOpenId, weChatState, verifyQrCodeActive, getVerifyCode, verifyNumber, saveInfo
 }

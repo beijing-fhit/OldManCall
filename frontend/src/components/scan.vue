@@ -49,9 +49,9 @@ export default {
       // this.$router.push('/ScanSuccess')
       // this.startScan()
       // 未激活二维码
-      // this.handleScanResult('http://wechatcall.ucallclub.com/ucall/call?type=1&eqrcodeid=da887208fe9a414b81da578b52102012')
+      this.handleScanResult('http://wechatcall.ucallclub.com/ucall/call?type=1&eqrcodeid=da887208fe9a414b81da578b52102012')
       // 已激活二维码
-      this.handleScanResult('http://wechatcall.ucallclub.com/ucall/call?type=1&eqrcodeid=041b1167896442a591237e4090aa52ff')
+      // this.handleScanResult('http://wechatcall.ucallclub.com/ucall/call?type=1&eqrcodeid=041b1167896442a591237e4090aa52ff')
     },
     startScan: function () {
       wx.scanQRCode({
@@ -68,7 +68,7 @@ export default {
       if (content.indexOf('eqrcodeid') !== -1) { // 注意，这里判断了二维码内容里面的url包含eqrcodeid
         var substr = content.split('?')[1]
         // var params = substr.split('&')
-        var qrcodeid = this.getQueryValue(substr,'eqrcodeid')
+        var qrcodeid = this.getQueryValue(substr, 'eqrcodeid')
         console.log('传入的qrcode是:' + qrcodeid)
         api.verifyQrCodeActive(qrcodeid).then(res => {
           console.log('验证二维码激活状态结果:', res)
@@ -103,15 +103,15 @@ export default {
         })
       }
     },
-    getQueryValue: function (str,queryName) {
-      var vars = str.split("&");
+    getQueryValue: function (str, queryName) {
+      var vars = str.split('&')
       for (var i = 0; i < vars.length; i++) {
-        var pair = vars[i].split("=");
+        var pair = vars[i].split('=')
         if (pair[0] === queryName) {
-          return pair[1];
+          return pair[1]
         }
       }
-      return null;
+      return null
     }
 
   }
