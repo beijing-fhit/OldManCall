@@ -34,5 +34,6 @@ urlpatterns = [
     url(r'^getopenid/', views.get_openid_from_session, name='getopenid'),
     url(r'^scan/', views.scan, name='scan'),
     url(r'^scan_resul/', views.scan_result, name='scan_result'),
+    url(r'^qr_code_info/',views.qr_code_info,name='qr_code_info')
 ]
 # urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

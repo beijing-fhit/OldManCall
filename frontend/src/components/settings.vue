@@ -90,28 +90,77 @@ export default {
       contact: this.getContact()
     }
   },
+  created: function () {
+    // 获取有无数据
+    api.getInfo(sessionStorage.getItem('qrCodeId')).then(res => {
+      //  获取数据
+      console.log('settings 获取info:', res)
+      if (res.data.status_code === 0) {
+        var data = res.data.data
+        this.manInfo.name = data.old_man_info.name
+        this.manInfo.age = data.old_man_info.age
+        this.manInfo.address = data.old_man_info.address
+        this.manInfo.medical_history = data.old_man_info.medical_history
+        this.manInfo.allergy = data.old_man_info.allergy
+        this.manInfo.blood_type = data.old_man_info.blood_type
+        this.manInfo.drugs = data.old_man_info.drugs
+        this.manInfo.treatment = data.old_man_info.treatment
+        this.contact = data.phone_number
+      }
+    })
+  },
   methods: {
     routeToCallUpdatePage: function () {
       this.$router.push('/updateNumber')
     },
     getContact: function () {
-      var contact = sessionStorage.getItem('contact').split(',')
-      return contact
+      if (sessionStorage.getItem('contact') !== null) {
+        var contact = sessionStorage.getItem('contact').split(',')
+        return contact
+      }
+      return []
     },
     saveInfo: function () {
+      // this.$router.push('/call')
       // 保存老人信息
       // 判空
       if (this.manInfo.name.length === 0) {
         this.$toast('姓名不能为空!')
         return
       }
+      // qrCodeId, oldManInfo, phone_number
+      var qrCodeId = sessionStorage.getItem('qrCodeId')
+      var info = this.manInfo
+      var phoneNumber = this.contact
       // 调用后端接口，保存老人信息到数据库
-      api.saveInfo().then(res => {
+      api.saveInfo(qrCodeId, info, phoneNumber).then(res => {
         // 保存信息成功
         console.log('保存信息成功:', res)
+        if (res.data.status_code === 0) {
+          this.$toast(res.message)
+          // 激活二维码
+          api.activateQrCode(sessionStorage.getItem('openId'), qrCodeId, sessionStorage.getItem('UcallFreeId'))
+            .then(res => {
+              if (res.data.Code === 0) {
+                this.$toast('激活二维码成功')
+                this.$router.push('/call')
+                console.log('激活二维码成功:', res)
+              } else {
+                this.$toast('激活二维码失败')
+                console.log('激活二维码失败:', res)
+              }
+            })
+            .catch(err => {
+              this.$toast('激活二维码失败')
+              console.log('激活二维码失败:', err)
+            })
+        } else {
+          this.$toast('保存信息失败')
+        }
       }).catch(err => {
         // 保存信息失败
         console.log('保存信息失败:', err)
+        this.$toast('保存信息失败')
       })
     }
   }

@@ -107,6 +107,8 @@ export default {
             this.$toast('验证失败')
             this.centerDialogVisible = false
           }
+          // 测试
+          this.$router.push('/settings')
         })
         .catch(() => {
           this.$toast('验证失败')
@@ -130,7 +132,7 @@ export default {
       }, 1000)
     },
     dialogSkip: function () {
-      this.centerDialogVisible = false
+      // this.centerDialogVisible = false
       console.log('跳过')
       this.$router.push('/settings')
     },

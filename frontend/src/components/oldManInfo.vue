@@ -3,38 +3,38 @@
     <div class="title">个人信息</div>
     <el-row class="info-item">
       <span class="info-key">姓名</span>
-      <span class="info-value">预设内容</span>
+      <span class="info-value">{{this.info.name}}</span>
 
       <span class="info-key">年纪</span>
-      <span class="info-value">预设内容</span>
+      <span class="info-value">{{this.info.age}}</span>
     </el-row>
     <el-row class="info-item">
       <span class="info-key">地址</span>
-      <span class="info-value">预设内容</span>
+      <span class="long-info-value">{{this.info.address}}</span>
     </el-row>
      <el-row class="info-item">
       <span class="info-key">病史</span>
-      <span class="info-value">预设内容</span>
+      <span class="long-info-value">{{this.info.medical_history}}</span>
     </el-row>
 
     <el-row class="info-item">
       <span class="info-key">过敏史</span>
-      <span class="info-value">预设内容</span>
+      <span class="long-info-value">{{this.info.allergy}}</span>
     </el-row>
 
     <el-row class="info-item">
       <span class="info-key">血型</span>
-      <span class="info-value">预设内容</span>
+      <span class="info-value">{{this.info.blood_type}}</span>
     </el-row>
 
     <el-row class="info-item">
       <span class="long-info-key">正在吃的药</span>
-      <span class="info-value">预设内容</span>
+      <span class="long-info-value">{{this.info.drugs}}</span>
     </el-row>
 
     <el-row class="info-item item-margin-top">
       <span class="long-info-key">正在进行的治疗</span>
-      <span class="info-value">预设内容</span>
+      <span class="long-info-value">{{this.info.treatment}}</span>
     </el-row>
   </div>
 
@@ -46,6 +46,20 @@ export default {
   data () {
     return {
       backgroundImage: require('../assets/card_bg.png')
+    }
+  },
+  props: {
+    info: {
+      default: {
+        name: '预设内容',
+        age: '预设内容',
+        address: '预设内容',
+        medical_history: '预设内容',
+        allergy: '预设内容',
+        blood_type: '预设内容',
+        drugs: '预设内容',
+        treatment: '预设内容'
+      }
     }
   }
 }
@@ -98,7 +112,7 @@ export default {
     font-size: 1.8rem;
     font-family: PingFangSC-Regular;
     width: 25%;
-    text-align: center;
+    text-align: left;
   }
   .long-info-key{
     color: #48534A;
@@ -107,6 +121,13 @@ export default {
     width: 45%;
     text-align: left;
     margin-left: 5%;
+  }
+  .long-info-value{
+    color: #FFFFFF;
+    font-size: 1.8rem;
+    font-family: PingFangSC-Regular;
+    width: 60%;
+    text-align: left;
   }
 
 </style>

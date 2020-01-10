@@ -70,6 +70,7 @@ export default {
         // var params = substr.split('&')
         var qrcodeid = this.getQueryValue(substr, 'eqrcodeid')
         console.log('传入的qrcode是:' + qrcodeid)
+        sessionStorage.setItem('qrCodeId', qrcodeid)
         api.verifyQrCodeActive(qrcodeid).then(res => {
           console.log('验证二维码激活状态结果:', res)
           var UcallFreeId = sessionStorage.getItem('UcallFreeId')
@@ -103,6 +104,7 @@ export default {
         })
       }
     },
+
     getQueryValue: function (str, queryName) {
       var vars = str.split('&')
       for (var i = 0; i < vars.length; i++) {

@@ -16,7 +16,7 @@ export default {
   methods: {
     getOpenId: function () {
       api.getOpenId().then(res => {
-        // console.log('在app.vue中获取openid成功:', res)
+        console.log('在app.vue中获取openid成功:', res)
         let openId = res.data
         sessionStorage.setItem('openId', openId)
         // 获取用户状态，保存其中的ucallfreeid

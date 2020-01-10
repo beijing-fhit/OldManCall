@@ -10,9 +10,9 @@ class OldManInfoAdmin(admin.ModelAdmin):
 
 @admin.register(PhoneNumber)
 class PhoneNumberAdmin(admin.ModelAdmin):
-    list_display = ('id', 'phone_number', 'content_type')
+    list_display = ('id', 'phone_number', 'content_type','content_object')
 
 
 @admin.register(QrCode)
 class QrCodeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'qrCodeId', 'old_man_info')
+    list_display = ('qr_code_id', 'old_man_info')
