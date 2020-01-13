@@ -80,10 +80,12 @@ export default {
             switch (data.ActiveState) {
               case 0:
                 // 未激活
+                sessionStorage.setItem('isQrCodeActive', false)
                 this.$router.push('/addContact')
                 break
               case 1:
                 // 已激活
+                sessionStorage.setItem('isQrCodeActive', true)
                 // 判断owner和自己是否相等
                 if (data.Owner === UcallFreeId) {
                   // 此二维码属于自己

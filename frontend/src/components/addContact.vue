@@ -53,6 +53,12 @@ export default {
       contact: []
     }
   },
+  mounted: function () {
+    // 在这里获取settings返回过来的数据
+    var number = this.$route.query.modifyNumber
+    // 判断首位是否为数字，是则显示电话号码，不是则不管
+    // if(number.charAt(0).isDecimalDigit)
+  },
   methods: {
     getVerifyCode: function () {
       if (this.number.length === 0) {
@@ -134,7 +140,12 @@ export default {
     dialogSkip: function () {
       // this.centerDialogVisible = false
       console.log('跳过')
-      this.$router.push('/settings')
+      this.$router.push({
+        path: '/settings',
+        query: {
+          getPhoneNumberFromNet: false
+        }
+      })
     },
     dialogAddMore: function () {
       console.log('添加下一位')

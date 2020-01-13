@@ -66,22 +66,20 @@ const saveInfo = (qrCodeId, oldManInfo, phoneNnumber) => {
   })
 }
 const weChatCalling = (openId, phoneNumbers, qrcodeid) => {
-  var length = phoneNumbers.length
-  var serviceNo = '`' + length
+  var serviceNo = ''
   for (var i = 0; i < phoneNumbers.length; i++) {
-    serviceNo += '`' + phoneNumbers[i] + '`' + '联系人' + (i+1)
+    serviceNo += phoneNumbers[i] + '`'
   }
-  serviceNo += '`'
+  serviceNo = serviceNo.substr(0, serviceNo.length - 1)
   console.log('serviceno:', serviceNo)
   return post(service.weChatCalling, {
-    enterpriseid: service.enterpriseid,
-    yhServiceno: service.yhServiceno,
-    callmode: 1,
-    servicetype: 1,
-    serviceno: serviceNo,
-    display: 1,
-    eqrcode: qrcodeid,
-    Platformid: 3
+    Enterpriseid: service.enterpriseid,
+    YhServiceno: service.yhServiceno,
+    Callmode: 1,
+    Servicetype: 1,
+    Serviceno: serviceNo,
+    Display: 1,
+    Eqrcode: qrcodeid
   }, getHeader(openId))
 }
 export default {

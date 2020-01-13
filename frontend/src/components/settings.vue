@@ -3,25 +3,30 @@
     <div >
       <Topbar class="topbar"/>
     </div>
-    <div class="item-title" v-on:click.prevent="routeToCallUpdatePage">
+    <div class="item-title">
       <span class="title-text">联系人号码绑定/修改</span>
-      <i class="el-icon-arrow-right big-font-size"/>
+      <!--<i class="el-icon-arrow-right big-font-size"/>-->
     </div>
     <!--联系人信息-->
-    <div class="contact-panel" v-for="(item,index) in contact" v-bind:key="index">
-      <el-row class="contact-item border-bottom" >
-        <span class="contact-name">联系人{{(index+1)}}</span>
-        <span class="contact-number">{{item}}</span>
+    <!--<div class="contact-panel" v-for="(item,index) in contact" v-bind:key="index">-->
+    <div class="contact-panel">
+      <el-row class="contact-item border-bottom">
+        <span class="contact-name">联系人1</span>
+        <span class="contact-number" @click="modifyContact(0)">{{contact[0]}}</span>
+        <span class="delete-img"/>
       </el-row>
-     <!--<el-row class="contact-item border-bottom" >-->
-        <!--<span class="contact-name">联系人2</span>-->
-        <!--<span class="contact-number">手机号码</span>-->
-      <!--</el-row>-->
-      <!--<el-row class="contact-item" >-->
-        <!--<span class="contact-name">联系人3</span>-->
-        <!--<span class="contact-number">手机号码</span>-->
-      <!--</el-row>-->
+      <el-row class="contact-item border-bottom">
+        <span class="contact-name">联系人2</span>
+        <span class="contact-number" @click="modifyContact(1)">{{contact[1]}}</span>
+        <i class="el-icon-delete delete-img" v-show="showContact2Delete"/>
+      </el-row>
+      <el-row class="contact-item">
+        <span class="contact-name">联系人3</span>
+        <span class="contact-number" @click="modifyContact(2)">{{contact[2]}}</span>
+        <i class="el-icon-delete delete-img" v-show="showContact3Delete"/>
+      </el-row>
     </div>
+    <!--</div>-->
     <!--填写老人信息-->
     <div class="item-title border-bottom">
       <span class="title-text">信息填写</span>
@@ -87,10 +92,13 @@ export default {
         drugs: '',
         treatment: ''
       },
-      contact: this.getContact()
+      contact: this.getContact(),
+      showContact2Delete: false,
+      showContact3Delete: false
     }
   },
   created: function () {
+
     // 获取有无数据
     api.getInfo(sessionStorage.getItem('qrCodeId')).then(res => {
       //  获取数据
@@ -105,7 +113,14 @@ export default {
         this.manInfo.blood_type = data.old_man_info.blood_type
         this.manInfo.drugs = data.old_man_info.drugs
         this.manInfo.treatment = data.old_man_info.treatment
-        this.contact = data.phone_number
+        // this.contact = data.phone_number
+        // 如果从addContact页面跳转过来的，则不使用网络上获取到的号码
+        if (this.$route.query.getPhoneNumberFromNet !== null && this.$route.query.getPhoneNumberFromNet === false) {
+          return
+        }
+        sessionStorage.setItem('contact', this.generatePhoneStr(data.phone_number))
+        console.log('generateStr:', this.generatePhoneStr(data.phone_number))
+        this.contact = this.getContact()
       }
     })
   },
@@ -113,12 +128,56 @@ export default {
     routeToCallUpdatePage: function () {
       this.$router.push('/updateNumber')
     },
+    generatePhoneStr: function (phoneNumbers) {
+      var str = ''
+      for (var i = 0; i < phoneNumbers.length; i++) {
+        var p = phoneNumbers[i]
+        str += p + ','
+      }
+      str = str.substr(0, str.length - 1)
+      return str
+    },
+    getleagalContact: function (contact) {
+      var c = []
+      var count = 0
+      for (var i = 0; i < contact.length; i++) {
+        if (contact[i] !== null | contact[i] !== '') {
+          c[count] = contact[i]
+          count++
+        }
+      }
+    },
     getContact: function () {
       if (sessionStorage.getItem('contact') !== null) {
         var contact = sessionStorage.getItem('contact').split(',')
+        switch (contact.length) {
+          case 1:
+            contact[1] = '请输入手机号码'
+            contact[2] = '请输入手机号码'
+            this.showContact2Delete = false
+            this.showContact3Delete = false
+            break
+          case 2:
+            this.showContact2Delete = true
+            this.showContact3Delete = false
+            contact[2] = '请输入手机号码'
+            break
+          case 3:
+            this.showContact2Delete = true
+            this.showContact3Delete = true
+            break
+        }
         return contact
       }
       return []
+    },
+    modifyContact: function (index) {
+      this.$router.push({
+        path: '/addContact',
+        query: {
+          modifyNumber: this.contact[index]
+        }
+      })
     },
     saveInfo: function () {
       // this.$router.push('/call')
@@ -131,29 +190,36 @@ export default {
       // qrCodeId, oldManInfo, phone_number
       var qrCodeId = sessionStorage.getItem('qrCodeId')
       var info = this.manInfo
-      var phoneNumber = this.contact
+      var phoneNumber = this.getleagalContact(this.contact)
+      console.log('合法的contact:', phoneNumber)
       // 调用后端接口，保存老人信息到数据库
       api.saveInfo(qrCodeId, info, phoneNumber).then(res => {
         // 保存信息成功
         console.log('保存信息成功:', res)
         if (res.data.status_code === 0) {
           this.$toast(res.message)
-          // 激活二维码
-          api.activateQrCode(sessionStorage.getItem('openId'), qrCodeId, sessionStorage.getItem('UcallFreeId'))
-            .then(res => {
-              if (res.data.Code === 0) {
-                this.$toast('激活二维码成功')
-                this.$router.push('/call')
-                console.log('激活二维码成功:', res)
-              } else {
+          console.log('二维码激活状态:', sessionStorage.getItem('isQrCodeActive'))
+          if (sessionStorage.getItem('isQrCodeActive') === false) {
+            // 激活二维码
+            api.activateQrCode(sessionStorage.getItem('openId'), qrCodeId, sessionStorage.getItem('UcallFreeId'))
+              .then(res => {
+                if (res.data.Code === 0) {
+                  this.$toast('激活二维码成功')
+                  this.$router.push('/call')
+                  console.log('激活二维码成功:', res)
+                } else {
+                  this.$toast('激活二维码失败')
+                  console.log('激活二维码失败:', res)
+                }
+              })
+              .catch(err => {
                 this.$toast('激活二维码失败')
-                console.log('激活二维码失败:', res)
-              }
-            })
-            .catch(err => {
-              this.$toast('激活二维码失败')
-              console.log('激活二维码失败:', err)
-            })
+                console.log('激活二维码失败:', err)
+              })
+          } else {
+            this.$toast('保存信息成功')
+            this.$router.push('/call')
+          }
         } else {
           this.$toast('保存信息失败')
         }
@@ -169,7 +235,7 @@ export default {
 
 <style scoped>
   .topbar {
-    background: #F9F9FA !important;
+    background: #FFFFFF !important;
   }
 
   .item-title {
@@ -179,7 +245,7 @@ export default {
     justify-content: space-between;
     height: 6rem;
     width: 100%;
-    background-color: #FFFFFF;
+    background-color: #FAFAFA;
   }
   .margin-horizontal{
     padding-left: 3vw;
@@ -201,7 +267,7 @@ export default {
     margin-right: 3vw;
   }
   .contact-panel{
-    background-color: #FAFAFA;
+    background-color: #FFFFFF;
     display: flex;
     flex-direction: column;
     align-items: left;
@@ -219,12 +285,18 @@ export default {
 
   }
 
+  .delete-img {
+    font-size: 2.5rem;
+    color: red;
+    /*margin-left: 2vw;*/
+    margin-right: 3vw;
+  }
   .border-bottom {
     border-bottom: 0.01rem inset #E5E5E5;
   }
 
   .contact-name {
-    width: fit-content;
+    width: 30%;
     font-size: 2rem;
     font-family: PingFangSC-Regular;
     color: #48534A;
@@ -236,7 +308,7 @@ export default {
   }
 
   .contact-number {
-    width: fit-content;
+    width: 60%;
     font-size: 2rem;
     font-family: PingFangSC-Regular;
     color: #B2B2B2;
