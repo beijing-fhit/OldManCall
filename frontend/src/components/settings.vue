@@ -1,7 +1,7 @@
 <template>
   <div>
     <div >
-      <Topbar class="topbar"/>
+      <Topbar class="topbar" :show-save-btn="true" @saveInfo="saveInfo"/>
     </div>
     <div class="item-title">
       <span class="title-text">联系人号码绑定/修改</span>
@@ -17,12 +17,12 @@
       </el-row>
       <el-row class="contact-item border-bottom">
         <span class="contact-name">联系人2</span>
-        <span class="contact-number" @click="modifyContact(1)">{{contact[1]}}</span>
+        <span class="contact-number" @click="modifyContact(1)">{{contact[1]=== "undefined"?text1:contact[1]}}</span>
         <i class="el-icon-delete delete-img" v-show="showContact2Delete"/>
       </el-row>
       <el-row class="contact-item">
         <span class="contact-name">联系人3</span>
-        <span class="contact-number" @click="modifyContact(2)">{{contact[2]}}</span>
+        <span class="contact-number" @click="modifyContact(2)">{{contact[2] === "undefined"?text1:contact[2]}}</span>
         <i class="el-icon-delete delete-img" v-show="showContact3Delete"/>
       </el-row>
     </div>
@@ -70,7 +70,7 @@
         <el-input v-model="manInfo.treatment" class="long-info-content normal-input-style no-border-input" placeholder="预设内容" clearable></el-input>
       </el-row>
     </div>
-    <el-button type="success" class="wide-button" @click="saveInfo">确定</el-button>
+    <el-button type="success" class="wide-button" @click="saveInfo">保存</el-button>
   </div>
 </template>
 
@@ -92,13 +92,14 @@ export default {
         drugs: '',
         treatment: ''
       },
+      text1: '请输入手机号码',
+      text2: '请输入手机号码',
       contact: this.getContact(),
       showContact2Delete: false,
       showContact3Delete: false
     }
   },
   created: function () {
-
     // 获取有无数据
     api.getInfo(sessionStorage.getItem('qrCodeId')).then(res => {
       //  获取数据
@@ -119,7 +120,8 @@ export default {
           return
         }
         sessionStorage.setItem('contact', this.generatePhoneStr(data.phone_number))
-        console.log('generateStr:', this.generatePhoneStr(data.phone_number))
+        // sessionStorage.setItem('contact', data.phone_number)
+        console.log('generateStr:', data.phone_number)
         this.contact = this.getContact()
       }
     })
@@ -140,42 +142,59 @@ export default {
     getleagalContact: function (contact) {
       var c = []
       var count = 0
-      for (var i = 0; i < contact.length; i++) {
-        if (contact[i] !== null | contact[i] !== '') {
-          c[count] = contact[i]
+      var temp = contact
+      for (var i = 0; i < temp.length; i++) {
+        if (temp[i] !== null && temp[i] !== '' && temp[i] !== undefined && temp[i] !== 'undefined') {
+          c[count] = temp[i]
           count++
         }
       }
+      return c
     },
     getContact: function () {
       if (sessionStorage.getItem('contact') !== null) {
         var contact = sessionStorage.getItem('contact').split(',')
         switch (contact.length) {
           case 1:
-            contact[1] = '请输入手机号码'
-            contact[2] = '请输入手机号码'
+            // this.text1 = '请输入手机号码'
+            // this.text2 = '请输入手机号码'
             this.showContact2Delete = false
             this.showContact3Delete = false
             break
           case 2:
             this.showContact2Delete = true
             this.showContact3Delete = false
-            contact[2] = '请输入手机号码'
+            // this.text2 = '请输入手机号码'
+            // this.text1 = contact[1]
             break
           case 3:
             this.showContact2Delete = true
             this.showContact3Delete = true
+            // this.text1 = contact[1]
+            // this.text2 = contact[2]
             break
         }
+        console.log('contact:', contact)
         return contact
       }
       return []
     },
     modifyContact: function (index) {
+      if (index === 2) {
+        if (this.text1 === '') {
+          this.$toast('请先绑定第二个联系人！')
+          return
+        }
+      }
+      console.log('修改号码1:', index)
+      console.log('修改号码2:', this.contact[index])
+      // var mode = 0 // 0代表修改，1代表新增
       this.$router.push({
         path: '/addContact',
         query: {
-          modifyNumber: this.contact[index]
+          modifyNumber: this.contact[index],
+          index: index,
+          mode: this.contact[index] === '' ? 1 : 0
         }
       })
     },

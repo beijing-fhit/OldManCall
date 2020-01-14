@@ -4,9 +4,11 @@ import requests
 from django.http import *
 from urllib import parse
 
+
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
+from backend import utils
 from .models import *
 from .serializer import *
 
@@ -59,6 +61,9 @@ def scan(request):
 
 def scan_result(request):
     print('scan_result:' + request.GET['qrresult'])
+
+
+
 
 
 @csrf_exempt
@@ -169,9 +174,15 @@ def qr_code_info(request):
         try:
             # 创建PhoneNumber对象
             # phoneNumbers = phone_numbers.split(',')
-            for pn in phone_numbers:
+            # 对比数据库里的和传进来的电话号码，数据库里多余的要删除，参数里面有不一样的要添加
+            oldNumbers = qrCode.get_phone_numbers()
+            delete, add = utils.compareArrays(oldNumbers, phone_numbers)
+            for d in delete:
                 ct = ContentType.objects.get(model='qrcode')
-                PhoneNumber.objects.get_or_create(phone_number=pn, content_type=ct, object_id=qrCode.qr_code_id)
+                PhoneNumber.objects.get(phone_number=d, content_type=ct, object_id=qrCode.qr_code_id).delete()
+            for a in add:
+                ct = ContentType.objects.get(model='qrcode')
+                PhoneNumber.objects.create(phone_number=a, content_type=ct, object_id=qrCode.qr_code_id)
             response['status_code'] = 0
             response['message'] = '保存信息成功'
             return JsonResponse(response)

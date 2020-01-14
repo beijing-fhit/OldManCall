@@ -50,14 +50,26 @@ export default {
       verifyBtnContent: '获取验证码',
       isVerifyBtnClickable: true,
       centerDialogVisible: false,
-      contact: []
+      contact: sessionStorage.getItem('contact') === null ? '' : sessionStorage.getItem('contact'),
+      modifyIndex: 1
+
     }
   },
   mounted: function () {
     // 在这里获取settings返回过来的数据
     var number = this.$route.query.modifyNumber
-    // 判断首位是否为数字，是则显示电话号码，不是则不管
-    // if(number.charAt(0).isDecimalDigit)
+    console.log('在addContact页面获取到的参数是:', number)
+    console.log('在addContact页面获取到的参数contact是:', this.contact)
+    if (number === null | number === '' | number === undefined) {
+      console.log('在addContact页面获取到的参数contact2是:', number)
+      return
+    }
+    // 判断字符串是否为数字，是则显示电话号码，不是则不管
+    if (number + ''.match('[0-9]{1,}')) {
+      this.number = number
+    } else {
+      this.number = ''
+    }
   },
   methods: {
     getVerifyCode: function () {
@@ -67,6 +79,10 @@ export default {
       }
       if (!this.isVerifyBtnClickable) {
         this.$toast('您点的太快了，请稍等！')
+        return
+      }
+      if (this.contact.split(',').indexOf(this.number, 0) !== -1) {
+        this.$toast('您已添加此号码!')
         return
       }
       var that = this
@@ -104,10 +120,32 @@ export default {
             // console.log('验证成功:', res)
             this.$toast('验证成功')
             this.centerDialogVisible = true
-            if (this.contact.indexOf(this.number) === -1) {
-              this.contact.push(this.number)
+            console.log('验证成功contact:', this.contact)
+            if (this.contact.indexOf(this.number, 0) === -1) {
+              var index = this.$route.query.index
+              if (index === null | index === '' | index === undefined) {
+                this.contact += this.number + ','
+                if (this.contact.length >= 3) {
+                  // 最后一个去掉逗号
+                  this.contact = this.contact.substr(0, this.contact.length - 1)
+                }
+                sessionStorage.setItem('contact', this.contact)
+              } else {
+                // 从settings页面跳转而来
+                var temp = this.contact.split(',')
+                var t = ''
+                if (index === 0) {
+                  t = this.number + ',' + temp[1] + ',' + temp[2]
+                } else if (index === 1) {
+                  t = temp[0] + ',' + this.number + ',' + temp[2]
+                } else if (index === 2) {
+                  t = temp[0] + ',' + temp[1] + ',' + this.number
+                }
+                this.contact = t
+                sessionStorage.setItem('contact', this.contact)
+                this.$router.push('/settings') // 从settings页面过来的保存数据之后，直接返回到settings页面中即可
+              }
             }
-            sessionStorage.setItem('contact', this.contact)
           } else {
             // console.log('验证失败:', res.data)
             this.$toast('验证失败')

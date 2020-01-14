@@ -48,10 +48,10 @@ export default {
     routeToScanSuccess: function () {
       // this.$router.push('/ScanSuccess')
       // this.startScan()
-      // 未激活二维码
-      this.handleScanResult('http://wechatcall.ucallclub.com/ucall/call?type=1&eqrcodeid=da887208fe9a414b81da578b52102012')
       // 已激活二维码
-      // this.handleScanResult('http://wechatcall.ucallclub.com/ucall/call?type=1&eqrcodeid=041b1167896442a591237e4090aa52ff')
+      // this.handleScanResult('http://wechatcall.ucallclub.com/ucall/call?type=1&eqrcodeid=da887208fe9a414b81da578b52102012')
+      // 未激活二维码
+      this.handleScanResult('http://wechatcall.ucallclub.com/ucall/call?type=1&eqrcodeid=2de95313459d4064a67a295fab195642')
     },
     startScan: function () {
       wx.scanQRCode({
