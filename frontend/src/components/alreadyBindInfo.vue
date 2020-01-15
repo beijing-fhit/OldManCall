@@ -3,7 +3,7 @@
     <el-image :src="heart_img_url" class="heart-img"></el-image>
     <div class="bind-info">{{bind_info}}</div>
     <old-man-info :info="this.info"></old-man-info>
-    <el-button type="success" class="wide-button">返回</el-button>
+    <el-button type="success" class="wide-button" @click="backToIndex">返回</el-button>
   </div>
 </template>
 
@@ -42,6 +42,11 @@ export default {
       .catch(err => {
         console.log('获取信息失败', err)
       })
+  },
+  methods: {
+    backToIndex: function () {
+      this.$router.back()
+    }
   }
 }
 </script>

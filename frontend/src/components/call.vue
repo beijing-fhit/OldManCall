@@ -48,6 +48,9 @@ export default {
       api.weChatCalling(sessionStorage.getItem('openId'), this.phone_number, sessionStorage.getItem('qrCodeId'))
         .then(res => {
           console.log('呼叫成功:', res)
+          if (res.data.Code === 0 && res.data.Caller !== '') {
+            window.location.href = 'tel://' + res.data.Caller
+          }
         })
         .catch(err => {
           console.log('呼叫失败:', err)

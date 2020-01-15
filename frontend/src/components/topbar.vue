@@ -1,9 +1,9 @@
 <template>
   <el-row class="bartop">
-    <i class="el-icon-menu color-purple margin-horizontal big-font-size"/>
+    <i class="el-icon-menu color-purple margin-horizontal big-font-size" @click="goHome"/>
     <i class="linear-line"/>
     <!--<el-divider direction="vertical"></el-divider>-->
-    <i class="el-icon-back color-purple margin-horizontal big-font-size"/>
+    <i class="el-icon-back color-purple margin-horizontal big-font-size" v-show="!hideBackBtn" @click="onBackTap"/>
     <div v-show="this.showSaveBtn" class="save-area" @click="save">
       <el-image :src="save_icon_url" class="color-purple img-icon-style"/>
       <span class="color-purple small-font-size margin-left-style">保存</span>
@@ -22,10 +22,17 @@ export default {
   methods: {
     save: function () {
       this.$emit('saveInfo')
+    },
+    onBackTap: function () {
+      this.$router.back()
+    },
+    goHome: function () {
+      this.$router.push('/')
     }
   },
   props: {
-    showSaveBtn: false
+    showSaveBtn: false,
+    hideBackBtn: false
   }
 }
 </script>

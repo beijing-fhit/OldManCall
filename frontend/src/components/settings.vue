@@ -12,17 +12,17 @@
     <div class="contact-panel">
       <el-row class="contact-item border-bottom">
         <span class="contact-name">联系人1</span>
-        <span class="contact-number" @click="modifyContact(0)">{{contact[0]}}</span>
+        <span class="contact-number" @click="modifyContact(0)">{{contact[0]=== undefined||contact[0]=== "undefined"||contact[0]=== null||contact[0]=== ""?text1:contact[0]}}</span>
         <span class="delete-img"/>
       </el-row>
       <el-row class="contact-item border-bottom">
         <span class="contact-name">联系人2</span>
-        <span class="contact-number" @click="modifyContact(1)">{{contact[1]=== "undefined"?text1:contact[1]}}</span>
+        <span class="contact-number" @click="modifyContact(1)">{{contact[1]=== undefined||contact[1]=== "undefined"||contact[1]=== null||contact[1]=== ""?text1:contact[1]}}</span>
         <i class="el-icon-delete delete-img" v-show="showContact2Delete"/>
       </el-row>
       <el-row class="contact-item">
         <span class="contact-name">联系人3</span>
-        <span class="contact-number" @click="modifyContact(2)">{{contact[2] === "undefined"?text1:contact[2]}}</span>
+        <span class="contact-number" @click="modifyContact(2)">{{contact[2]=== undefined||contact[2]=== "undefined"||contact[2]=== null||contact[2]=== ""?text1:contact[2]}}</span>
         <i class="el-icon-delete delete-img" v-show="showContact3Delete"/>
       </el-row>
     </div>
@@ -218,7 +218,7 @@ export default {
         if (res.data.status_code === 0) {
           this.$toast(res.message)
           console.log('二维码激活状态:', sessionStorage.getItem('isQrCodeActive'))
-          if (sessionStorage.getItem('isQrCodeActive') === false) {
+          if (sessionStorage.getItem('isQrCodeActive') === 0 || sessionStorage.getItem('isQrCodeActive') === '0') { // 未激活
             // 激活二维码
             api.activateQrCode(sessionStorage.getItem('openId'), qrCodeId, sessionStorage.getItem('UcallFreeId'))
               .then(res => {

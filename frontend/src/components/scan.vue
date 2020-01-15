@@ -1,6 +1,6 @@
 <template>
   <div class="all-container">
-    <topbar/>
+    <topbar :hide-back-btn="true"/>
     <div class="img-text-container">
       <div class="text-container">
         <label v-html="this.tip" class="label-style"></label>
@@ -47,13 +47,17 @@ export default {
   methods: {
     routeToScanSuccess: function () {
       // this.$router.push('/ScanSuccess')
-      // this.startScan()
+      this.startScan()
       // 已激活二维码
       // this.handleScanResult('http://wechatcall.ucallclub.com/ucall/call?type=1&eqrcodeid=da887208fe9a414b81da578b52102012')
       // 未激活二维码
-      this.handleScanResult('http://wechatcall.ucallclub.com/ucall/call?type=1&eqrcodeid=2de95313459d4064a67a295fab195642')
+      // this.handleScanResult('http://wechatcall.ucallclub.com/ucall/call?type=1&eqrcodeid=2de95313459d4064a67a295fab195642')
     },
     startScan: function () {
+      var ucallFreeId = sessionStorage.getItem('UcallFreeId')
+      if (ucallFreeId === null || ucallFreeId === '' || ucallFreeId === 'undefined' || ucallFreeId === undefined) {
+        return
+      }
       wx.scanQRCode({
         needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
         scanType: ['qrCode', 'barCode'], // 可以指定扫二维码还是一维码，默认二者都有
@@ -80,12 +84,12 @@ export default {
             switch (data.ActiveState) {
               case 0:
                 // 未激活
-                sessionStorage.setItem('isQrCodeActive', false)
+                sessionStorage.setItem('isQrCodeActive', 0)
                 this.$router.push('/addContact')
                 break
               case 1:
                 // 已激活
-                sessionStorage.setItem('isQrCodeActive', true)
+                sessionStorage.setItem('isQrCodeActive', 1)
                 // 判断owner和自己是否相等
                 if (data.Owner === UcallFreeId) {
                   // 此二维码属于自己

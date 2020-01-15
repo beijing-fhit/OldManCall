@@ -143,7 +143,13 @@ export default {
                 }
                 this.contact = t
                 sessionStorage.setItem('contact', this.contact)
-                this.$router.push('/settings') // 从settings页面过来的保存数据之后，直接返回到settings页面中即可
+                // 从settings页面过来的保存数据之后，直接返回到settings页面中即可
+                this.$router.push({
+                  path: '/settings',
+                  query: {
+                    getPhoneNumberFromNet: false
+                  }
+                })
               }
             }
           } else {
@@ -151,8 +157,13 @@ export default {
             this.$toast('验证失败')
             this.centerDialogVisible = false
           }
-          // 测试
-          this.$router.push('/settings')
+          // test 测试,最后上线必须删除
+          // this.$router.push({
+          //   path: '/settings',
+          //   query: {
+          //     getPhoneNumberFromNet: false
+          //   }
+          // })
         })
         .catch(() => {
           this.$toast('验证失败')
