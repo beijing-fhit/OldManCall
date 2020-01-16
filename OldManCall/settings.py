@@ -84,8 +84,12 @@ WSGI_APPLICATION = 'OldManCall.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'MySQL57',
+        'USER': 'root',
+        'PASSWORD': 'fhit@48#3a',
+        'HOST': '39.104.85.2',
+        'PORT': '3306',
     }
 }
 
