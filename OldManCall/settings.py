@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'backend',
     'rest_framework',  # 使用rest_framework框架
-    'rest_framework_docs',
     'corsheaders',  # 跨域问题
 ]
 
