@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="5386db37-f219-4237-9709-347db73fd507" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/OldManCall/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/OldManCall/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -56,8 +57,8 @@
       <file leaf-file-name="settings.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/OldManCall/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="167">
-              <caret line="40" column="1" lean-forward="true" selection-start-line="40" selection-start-column="1" selection-end-line="40" selection-end-column="1" />
+            <state relative-caret-position="151">
+              <caret line="39" column="28" lean-forward="true" selection-start-line="39" selection-start-column="28" selection-end-line="39" selection-end-column="28" />
             </state>
           </provider>
         </entry>
@@ -418,7 +419,7 @@
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.32943144" />
       <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.49636218" weight="0.32107022" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4907033" weight="0.4632107" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4907033" weight="0.46989965" />
       <window_info active="true" anchor="bottom" id="Terminal" order="16" sideWeight="0.48746967" visible="true" weight="0.4799331" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26596606" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
@@ -794,8 +795,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/OldManCall/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="167">
-          <caret line="40" column="1" lean-forward="true" selection-start-line="40" selection-start-column="1" selection-end-line="40" selection-end-column="1" />
+        <state relative-caret-position="151">
+          <caret line="39" column="28" lean-forward="true" selection-start-line="39" selection-start-column="28" selection-end-line="39" selection-end-column="28" />
         </state>
       </provider>
     </entry>
