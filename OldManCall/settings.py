@@ -85,10 +85,10 @@ WSGI_APPLICATION = 'OldManCall.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'MySQL57',
+        'NAME': 'oldmaninfo',
         'USER': 'root',
-        'PASSWORD': 'fhit@48#3a',
-        'HOST': '39.104.85.2',
+        'PASSWORD': 'Licai19941022800',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
     }
 }
