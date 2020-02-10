@@ -20,7 +20,7 @@ def index(request):
 
 def get_code(request):
     url = 'https://agency.ucallclub.com/wechart/Oauth2?'
-    redirect_url = 'http://m2851085w2.wicp.vip/openid'
+    redirect_url = 'http://mustberich.cn/openid'
     a = {'redirect_uri': redirect_url}
     encode_url = parse.urlencode(a)
     # print("url:" + encode_url)
