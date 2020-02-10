@@ -54,6 +54,7 @@ export default {
       // this.handleScanResult('http://wechatcall.ucallclub.com/ucall/call?type=1&eqrcodeid=2de95313459d4064a67a295fab195642')
     },
     startScan: function () {
+      var that = this
       var ucallFreeId = sessionStorage.getItem('UcallFreeId')
       if (ucallFreeId === null || ucallFreeId === '' || ucallFreeId === 'undefined' || ucallFreeId === undefined) {
         return
@@ -63,12 +64,13 @@ export default {
         scanType: ['qrCode', 'barCode'], // 可以指定扫二维码还是一维码，默认二者都有
         success: function (res) {
           var result = res.resultStr // 当needResult 为 1 时，扫码返回的结果
-          this.handleScanResult(result)
+          that.handleScanResult(result)
           console.log('scanQrCode:', result)
         }
       })
     },
     handleScanResult: function (content) {
+      var that = this
       if (content.indexOf('eqrcodeid') !== -1) { // 注意，这里判断了二维码内容里面的url包含eqrcodeid
         var substr = content.split('?')[1]
         // var params = substr.split('&')
@@ -85,7 +87,7 @@ export default {
               case 0:
                 // 未激活
                 sessionStorage.setItem('isQrCodeActive', 0)
-                this.$router.push('/addContact')
+                that.$router.push('/addContact')
                 break
               case 1:
                 // 已激活
@@ -93,15 +95,15 @@ export default {
                 // 判断owner和自己是否相等
                 if (data.Owner === UcallFreeId) {
                   // 此二维码属于自己
-                  this.$router.push('/settings')
+                  that.$router.push('/settings')
                 } else {
                   // 此二维码属于别人
-                  this.$router.push('/alreadyBindInfo')
+                  that.$router.push('/alreadyBindInfo')
                 }
                 break
               default:
                 // alert('二维码无效')
-                this.$toast('二维码无效')
+                that.$toast('二维码无效')
                 break
             }
           }

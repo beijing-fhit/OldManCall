@@ -53,7 +53,7 @@ def get_openid_from_session(request):
 
 def scan(request):
     url = 'http://sao315.com/w/api/saoyisao?'
-    scan_redirect_url = 'http://m2851085w2.wicp.vip/scan_result'
+    scan_redirect_url = 'http://mustberich.cn/scan_result'
     a = {'redirect_uri': scan_redirect_url}
     encode_url = parse.urlencode(a)
     return HttpResponseRedirect(url + encode_url)
