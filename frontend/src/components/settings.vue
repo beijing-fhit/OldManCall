@@ -214,7 +214,7 @@ export default {
     },
     deleteContact: function (index) {
       this.contact[index] = ''
-      sessionStorage.setItem('contact', this.generatePhoneStr(this.contact)
+      sessionStorage.setItem('contact', this.generatePhoneStr(this.contact))
       this.contact = this.getContact()
     },
     saveInfo: function () {
