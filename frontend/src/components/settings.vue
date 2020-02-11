@@ -18,12 +18,28 @@
       <el-row class="contact-item border-bottom">
         <span class="contact-name">联系人2</span>
         <span class="contact-number" @click="modifyContact(1)">{{contact[1]=== undefined||contact[1]=== "undefined"||contact[1]=== null||contact[1]=== ""?text1:contact[1]}}</span>
-        <i class="el-icon-delete delete-img" v-show="showContact2Delete"/>
+        <el-popconfirm
+          confirm-button-text="确定"
+          cancel-button-text="取消"
+          icon="el-icon-info"
+          iconColor="red"
+          @onConfirm="deleteContact(1)"
+          title="删除该联系人吗？">
+          <i slot="reference" class="el-icon-delete delete-img" v-show="showContact2Delete"/>
+        </el-popconfirm>
       </el-row>
       <el-row class="contact-item">
         <span class="contact-name">联系人3</span>
         <span class="contact-number" @click="modifyContact(2)">{{contact[2]=== undefined||contact[2]=== "undefined"||contact[2]=== null||contact[2]=== ""?text1:contact[2]}}</span>
-        <i class="el-icon-delete delete-img" v-show="showContact3Delete"/>
+        <el-popconfirm
+          confirm-button-text="确定"
+          cancel-button-text="取消"
+          icon="el-icon-info"
+          iconColor="red"
+          @onConfirm="deleteContact(2)"
+          title="删除该联系人吗？">
+          <i class="el-icon-delete delete-img" v-show="showContact3Delete" @click="deleteContact(2)"/>
+        </el-popconfirm>
       </el-row>
     </div>
     <!--</div>-->
@@ -186,8 +202,6 @@ export default {
           return
         }
       }
-      console.log('修改号码1:', index)
-      console.log('修改号码2:', this.contact[index])
       // var mode = 0 // 0代表修改，1代表新增
       this.$router.push({
         path: '/addContact',
@@ -197,6 +211,9 @@ export default {
           mode: this.contact[index] === '' ? 1 : 0
         }
       })
+    },
+    deleteContact: function (index) {
+      this.contact[index] = ''
     },
     saveInfo: function () {
       // this.$router.push('/call')
