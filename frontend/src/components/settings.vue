@@ -96,6 +96,7 @@ import api from '../api'
 export default {
   name: 'settings',
   components: {Topbar},
+  inject: ['reload'],
   data () {
     return {
       manInfo: {
@@ -216,6 +217,7 @@ export default {
       this.contact[index] = ''
       sessionStorage.setItem('contact', this.generatePhoneStr(this.contact))
       this.contact = this.getContact()
+      this.reload()
     },
     saveInfo: function () {
       // this.$router.push('/call')

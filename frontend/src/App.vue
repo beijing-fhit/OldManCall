@@ -10,6 +10,16 @@ import api from './api'
 export default {
 
   name: 'App',
+  provide () {
+    return {
+      reload: this.reload
+    }
+  },
+  data () {
+    return {
+      isRouterAlive: true
+    }
+  },
   created () {
     this.getOpenId()
   },
@@ -29,6 +39,12 @@ export default {
         })
       }).catch(res => {
         console.log('在app.vue中获取openid失败:', res)
+      })
+    },
+    reload () {
+      this.isRouterAlive = false
+      this.$nextTick(function () {
+        this.isRouterAlive = true
       })
     }
   }
