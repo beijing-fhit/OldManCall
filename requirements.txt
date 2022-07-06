@@ -12,7 +12,7 @@ djangorestframework==3.9.4
 drfdocs2==0.0.13
 idna==2.8
 ipaddress==1.0.22
-lxml==4.4.0  
+lxml==4.9.1  
 Markdown==3.1.1
 mysqlclient==1.4.6
 Pillow==5.4.1
