@@ -1,5 +1,5 @@
 asgiref==3.2.3
-certifi==2019.6.16
+certifi==2022.12.7
 chardet==3.0.4
 cx-Oracle==7.3.0
 Django==2.2.8
